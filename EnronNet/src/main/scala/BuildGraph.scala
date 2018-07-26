@@ -1,5 +1,6 @@
 import org.apache.spark.sql.SparkSession
 import ch.epfl.lts2.Utils._
+import org.slf4j.{Logger, LoggerFactory}
 
 object BuildGraph {
   def main(args: Array[String]): Unit = {
@@ -7,17 +8,38 @@ object BuildGraph {
     suppressLogs(List("org", "akka"))
 
     val spark = SparkSession.builder
-      .master("local")
-      .appName("Spark Graph Frames")
+      .master("local[*]")
+      .appName("Biuld Enron Graph")
+      .config("spark.driver.maxResultSize", "10g")
+      .config("spark.executor.memory", "50g")
       .getOrCreate()
 
-    val lines = spark.sparkContext.parallelize(Seq("This is the first line", "This is the second line", "This is the third line"))
+    val log: Logger = LoggerFactory.getLogger(this.getClass)
+    log.info("Start")
 
-    val counts = lines.flatMap(line => line.split(" "))
-      .map(word => (word, 1))
-      .reduceByKey(_ + _)
+    val PATH_RESOURCES: String = "/mnt/data/git/enron-email-network-analysis/EnronNet/src/main/resources/"
 
-    counts.foreach(println)
+    val edgesDF = spark.sqlContext.read
+      .format("com.databricks.spark.csv")
+      .options(Map("header"-> "true", "inferSchema"-> "true"))
+      .load(PATH_RESOURCES + "weighted_links_activated.csv")
+
+    edgesDF.show()
+
+    log.info(edgesDF.count() + " links in the network")
+
+    val activationsDF = spark.sqlContext.read
+      .format("com.databricks.spark.csv")
+      .options(Map("header"-> "false", "inferSchema"-> "true"))
+      .load(PATH_RESOURCES + "activations-enron.csv")
+      .withColumnRenamed("_c0", "Email")
+      .withColumnRenamed("_c1", "Activations")
+
+    activationsDF.show()
+
+    log.info(activationsDF.count() + " emails in the network")
+
+
   }
 
 }
