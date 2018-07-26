@@ -1,7 +1,10 @@
 import org.apache.spark.sql.SparkSession
+import ch.epfl.lts2.Utils._
 
-object EnronNetBuildGraph {
+object BuildGraph {
   def main(args: Array[String]): Unit = {
+
+    suppressLogs(List("org", "akka"))
 
     val spark = SparkSession.builder
       .master("local")
