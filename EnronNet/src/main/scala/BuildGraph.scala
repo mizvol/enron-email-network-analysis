@@ -60,6 +60,21 @@ object BuildGraph {
 
     log.info(graph.edges.count() + " edges and " + graph.vertices.count() + " vertices in the graph")
 
-    
+    val startTime = 0
+    val endTime = DAYS_TOTAL
+
+    val trainedGraph = graph.mapTriplets(trplt => compareTimeSeries(trplt.dstAttr, trplt.srcAttr, start = startTime, stop = endTime, isFiltered = true))
+
+    val prunedGraph = removeLowWeightEdges(trainedGraph, minWeight = 1.0)
+
+    log.info(prunedGraph.vertices.count() + " vertices and " + prunedGraph.edges.count() + " edges in the trained and pruned graph")
+
+    val cleanGraph = removeSingletons(prunedGraph)
+
+    log.info(cleanGraph.vertices.count() + " vertices and " + cleanGraph.edges.count() + " edges after removing singletones")
+
+    val LCC = getLargestConnectedComponent(cleanGraph)
+
+    log.info(LCC.vertices.count() + " vertices and " + LCC.edges.count() + " edges in LCC")
   }
 }
