@@ -100,7 +100,7 @@ package object Utils {
     * @param start Start of time-window
     * @param stop End of time-window
     * @param upperBoundActivationsNumber Lower limit of time-series values
-    * @param isFiltered Specifies if filtering is required
+    * @param isFiltered Specifies if filtering is required (divides values by the number of spikes)
     * @return Similarity measure
     */
   def compareTimeSeries(m1: Map[Int, Double], m2: Map[Int, Double], start: Int, stop: Int, upperBoundActivationsNumber: Int = 0, isFiltered: Boolean, lambda: Double = 0.5): Double = {
