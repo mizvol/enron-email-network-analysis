@@ -56,9 +56,11 @@ object BuildGraph {
 
     log.info(verticesRDD.count() + " vertices in RDD")
 
-    val graph = Graph(verticesRDD, edgesRDD)
+    var graph = Graph(verticesRDD, edgesRDD)
 
-    log.info(graph.edges.count() + " edges and " + graph.vertices.count() + " vertices in the graph")
+    graph = removeSingletons(graph)
+
+    log.info(graph.edges.count() + " edges and " + graph.vertices.count() + " vertices in the initial graph after removing singletones")
 
     val startTime = 0
     val endTime = DAYS_TOTAL
@@ -76,5 +78,7 @@ object BuildGraph {
     val LCC = getLargestConnectedComponent(cleanGraph)
 
     log.info(LCC.vertices.count() + " vertices and " + LCC.edges.count() + " edges in LCC")
+
+    saveGraph(LCC.mapVertices((id, v) => v), weighted = false, fileName = PATH_RESOURCES + "graph.gexf")
   }
 }
