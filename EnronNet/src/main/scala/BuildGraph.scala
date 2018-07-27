@@ -59,6 +59,7 @@ object BuildGraph {
     var graph = Graph(verticesRDD, edgesRDD)
 
     graph = removeSingletons(graph)
+    saveGraph(graph.mapVertices((id, v) => v), weighted = false, fileName = PATH_RESOURCES + "graph_init.gexf")
 
     log.info(graph.edges.count() + " edges and " + graph.vertices.count() + " vertices in the initial graph after removing singletones")
 
