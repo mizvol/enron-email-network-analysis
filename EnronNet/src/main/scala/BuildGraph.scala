@@ -1,5 +1,6 @@
 import org.apache.spark.sql.SparkSession
 import ch.epfl.lts2.Utils._
+import ch.epfl.lts2.Globals._
 import org.slf4j.{Logger, LoggerFactory}
 import org.apache.spark.graphx.{Edge, Graph, VertexId}
 import org.apache.spark.rdd.RDD
@@ -20,9 +21,6 @@ object BuildGraph {
 
     val log: Logger = LoggerFactory.getLogger(this.getClass)
     log.info("Start")
-
-    val PATH_RESOURCES: String = "/mnt/data/git/enron-email-network-analysis/EnronNet/src/main/resources/"
-    val DAYS_TOTAL: Int = 2221
 
     val edgesDF = spark.sqlContext.read
       .format("com.databricks.spark.csv")
