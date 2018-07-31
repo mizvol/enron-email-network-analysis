@@ -57,12 +57,12 @@ object BuildGraph {
     var graph = Graph(verticesRDD, edgesRDD)
 
     graph = removeSingletons(graph)
-    saveGraph(graph.mapVertices((id, v) => v), weighted = false, fileName = PATH_RESOURCES + "graph_init.gexf")
+//    saveGraph(graph.mapVertices((id, v) => v), weighted = false, fileName = PATH_RESOURCES + "graph_init.gexf")
 
     log.info(graph.edges.count() + " edges and " + graph.vertices.count() + " vertices in the initial graph after removing singletones")
 
-    val startTime = 0
-    val endTime = DAYS_TOTAL
+    val startTime = MAY_01_START
+    val endTime = MAY_01_END
 
     val trainedGraph = graph.mapTriplets(trplt => compareTimeSeries(trplt.dstAttr, trplt.srcAttr, start = startTime, stop = endTime, isFiltered = true))
 
