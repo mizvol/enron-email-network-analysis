@@ -70,6 +70,7 @@ object BuildGraph {
     val startTime = MAY_01_START
     val endTime = MAY_01_END
 
+    // STD filtering
     val BURST_RATE = 5
     val BURST_COUNT = 5
 
@@ -88,16 +89,20 @@ object BuildGraph {
 
     graph = peaksGraph
 
+    // Learn weights
     val trainedGraph = graph.mapTriplets(trplt => compareTimeSeries(trplt.dstAttr, trplt.srcAttr, start = startTime, stop = endTime, isFiltered = true))
 
+    // Remove low weight edges
     val prunedGraph = removeLowWeightEdges(trainedGraph, minWeight = 1.0)
 
     log.info(prunedGraph.vertices.count() + " vertices and " + prunedGraph.edges.count() + " edges in the trained and pruned graph")
 
+    // Remove singletones
     val cleanGraph = removeSingletons(prunedGraph)
 
     log.info(cleanGraph.vertices.count() + " vertices and " + cleanGraph.edges.count() + " edges after removing singletones")
 
+    // Keep the largest connected component only
     val LCC = getLargestConnectedComponent(cleanGraph)
 
     log.info(LCC.vertices.count() + " vertices and " + LCC.edges.count() + " edges in LCC")
