@@ -50,7 +50,7 @@ object BuildGraph {
         .toMap
     }
 
-    val verticesRDD: RDD[(VertexId, (Map[Int, Double]))] = activationsDF.as[(String, String)].rdd.map(v => (v._1.toLong, parseDict(v._2)))
+    val verticesRDD: RDD[(VertexId, Map[Int, Double])] = activationsDF.as[(String, String)].rdd.map(v => (v._1.toLong, parseDict(v._2)))
 
     log.info(verticesRDD.count() + " vertices in RDD")
 
