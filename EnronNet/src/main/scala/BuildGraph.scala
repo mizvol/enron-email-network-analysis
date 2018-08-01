@@ -42,6 +42,12 @@ object BuildGraph {
 
     log.info(edgesRDD.count() + " edges in RDD")
 
+    /***
+      * Parse string stored in the format of Python Dictionary
+      * 
+      * @param stringMap Sting in Python Dictionary format
+      * @return Scala Map [Int, Double], where Int is a key of a Python Dictionary and Double is a corresponding value
+      */
     def parseDict(stringMap: String): Map[Int, Double] = {
       stringMap.substring(0, stringMap.length)
         .split(", ")
