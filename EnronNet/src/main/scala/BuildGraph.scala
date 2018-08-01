@@ -44,7 +44,7 @@ object BuildGraph {
 
     /***
       * Parse string stored in the format of Python Dictionary
-      * 
+      *
       * @param stringMap Sting in Python Dictionary format
       * @return Scala Map [Int, Double], where Int is a key of a Python Dictionary and Double is a corresponding value
       */
@@ -69,6 +69,24 @@ object BuildGraph {
 
     val startTime = MAY_01_START
     val endTime = MAY_01_END
+
+    val BURST_RATE = 5
+    val BURST_COUNT = 5
+
+    val peaksVertices = graph.vertices.map(v => (v._1, (mapToList(v._2, DAYS_TOTAL), v._2)))
+      .filter(v => v._2._2.filterKeys(hour => hour > startTime & hour < endTime).values.count(l => l > BURST_RATE * stddev(v._2._1, v._2._2.values.sum / DAYS_TOTAL) + v._2._2.values.sum / DAYS_TOTAL) > BURST_COUNT)
+      .map(v=> (v._1, v._2._2))
+
+    val vIDs = peaksVertices.map(_._1).collect().toSet
+
+    val peaksEgdes = graph.edges.filter(e => vIDs.contains(e.dstId) & vIDs.contains(e.srcId))
+
+    val peaksGraph = Graph(peaksVertices, peaksEgdes)
+    //    val peaksGraph = graph
+
+    log.info(peaksGraph.edges.count() + " edges and " + peaksGraph.vertices.count() + " vertices in peaks graph after STD filtering")
+
+    graph = peaksGraph
 
     val trainedGraph = graph.mapTriplets(trplt => compareTimeSeries(trplt.dstAttr, trplt.srcAttr, start = startTime, stop = endTime, isFiltered = true))
 
