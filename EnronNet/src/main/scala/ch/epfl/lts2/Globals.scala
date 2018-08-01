@@ -5,7 +5,8 @@ package ch.epfl.lts2
   */
 package object Globals {
 
-  val PATH_RESOURCES: String = "/mnt/data/git/enron-email-network-analysis/EnronNet/src/main/resources/"
+//  val PATH_RESOURCES: String = "/mnt/data/git/enron-email-network-analysis/EnronNet/src/main/resources/"
+  val PATH_RESOURCES: String = "/home/volodymyrmiz/git/enron-email-network-analysis/EnronNet/src/main/resources/"
 
   // timestamps are in days, e.g. 2221 days in total
   val START_TIME: Int = 0 // start date: 06 Jan 1998
