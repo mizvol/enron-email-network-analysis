@@ -82,7 +82,7 @@ object BuildGraph {
       * @param list the same time-series unfolded into a list.
       * @param burstRate multiplier for standard deviation. Proportional to the required strength of a spike.
       * @param burstCount required number of spikes in the time-series
-      * @return True if the time-series has @burstCount number of spikes of strength @burstRate * standardDeviation
+      * @return True if the time-series has required @burstCount number of spikes of strength @burstRate * standardDeviation
       */
     def hasSpike(map: Map[Int, Double], list: List[Double], burstRate: Int = 5, burstCount: Int = 5): Boolean = {
       val sum: Double = map.values.sum
