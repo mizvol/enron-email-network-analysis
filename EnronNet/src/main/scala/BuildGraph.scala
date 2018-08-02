@@ -67,15 +67,23 @@ object BuildGraph {
 
     log.info(graph.edges.count() + " edges and " + graph.vertices.count() + " vertices in the initial graph after removing singletones")
 
-    val startTime = MAY_01_START
-    val endTime = MAY_01_END
+    val startTime = APR_01_START
+    val endTime = APR_01_END
 
     // STD filtering
     val BURST_RATE = 5
-    val BURST_COUNT = 5
+    val BURST_COUNT = 3
+
+    def isSpike(map: Map[Int, Double], list: List[Double], burstRate: Int = 5, burstCount: Int = 5): Boolean = {
+      val sum: Double = map.values.sum
+      val nTimeStamps: Int = list.size
+      map.
+        filterKeys(hour => hour > startTime & hour < endTime)
+        .values.count(l => l > burstRate * stddev(list, sum / nTimeStamps) + sum / nTimeStamps) > burstCount
+    }
 
     val peaksVertices = graph.vertices.map(v => (v._1, (mapToList(v._2, DAYS_TOTAL), v._2)))
-      .filter(v => v._2._2.filterKeys(hour => hour > startTime & hour < endTime).values.count(l => l > BURST_RATE * stddev(v._2._1, v._2._2.values.sum / DAYS_TOTAL) + v._2._2.values.sum / DAYS_TOTAL) > BURST_COUNT)
+      .filter(v => isSpike(v._2._2, v._2._1, burstRate = BURST_RATE, burstCount = BURST_COUNT))
       .map(v=> (v._1, v._2._2))
 
     val vIDs = peaksVertices.map(_._1).collect().toSet
@@ -93,7 +101,7 @@ object BuildGraph {
     val trainedGraph = graph.mapTriplets(trplt => compareTimeSeries(trplt.dstAttr, trplt.srcAttr, start = startTime, stop = endTime, isFiltered = true))
 
     // Remove low weight edges
-    val prunedGraph = removeLowWeightEdges(trainedGraph, minWeight = 1.0)
+    val prunedGraph = removeLowWeightEdges(trainedGraph, minWeight = 0.1)
 
     log.info(prunedGraph.vertices.count() + " vertices and " + prunedGraph.edges.count() + " edges in the trained and pruned graph")
 
