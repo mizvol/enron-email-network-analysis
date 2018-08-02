@@ -74,7 +74,17 @@ object BuildGraph {
     val BURST_RATE = 5
     val BURST_COUNT = 3
 
-    def isSpike(map: Map[Int, Double], list: List[Double], burstRate: Int = 5, burstCount: Int = 5): Boolean = {
+    /**
+      * Check if a time-series has spikes.
+      * Measure of the strength of a spike is a @burstRate * standardDeviation.
+      *
+      * @param map time-series as a map [TimeStamp->Value].
+      * @param list the same time-series unfolded into a list.
+      * @param burstRate multiplier for standard deviation. Proportional to the required strength of a spike.
+      * @param burstCount required number of spikes in the time-series
+      * @return True if the time-series has @burstCount number of spikes of strength @burstRate * standardDeviation
+      */
+    def hasSpike(map: Map[Int, Double], list: List[Double], burstRate: Int = 5, burstCount: Int = 5): Boolean = {
       val sum: Double = map.values.sum
       val nTimeStamps: Int = list.size
       map.
@@ -83,7 +93,7 @@ object BuildGraph {
     }
 
     val peaksVertices = graph.vertices.map(v => (v._1, (mapToList(v._2, DAYS_TOTAL), v._2)))
-      .filter(v => isSpike(v._2._2, v._2._1, burstRate = BURST_RATE, burstCount = BURST_COUNT))
+      .filter(v => hasSpike(v._2._2, v._2._1, burstRate = BURST_RATE, burstCount = BURST_COUNT))
       .map(v=> (v._1, v._2._2))
 
     val vIDs = peaksVertices.map(_._1).collect().toSet
