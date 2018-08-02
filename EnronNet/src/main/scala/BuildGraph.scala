@@ -25,14 +25,14 @@ object BuildGraph {
     val edgesDF = spark.sqlContext.read
       .format("com.databricks.spark.csv")
       .options(Map("header"-> "true", "inferSchema"-> "true"))
-      .load(PATH_RESOURCES + "weighted_links_activated_id.csv")
+      .load(PATH_RESOURCES + "weighted_links_activated_id_1999_2002.csv")
 
     log.info(edgesDF.count() + " links in the network")
 
     val activationsDF = spark.sqlContext.read
       .format("com.databricks.spark.csv")
       .options(Map("header"-> "false", "inferSchema"-> "true"))
-      .load(PATH_RESOURCES + "activations-enron_id.csv")
+      .load(PATH_RESOURCES + "activations-enron_id_1999_2002.csv")
       .withColumnRenamed("_c0", "Email")
       .withColumnRenamed("_c1", "Activations")
 
@@ -67,12 +67,12 @@ object BuildGraph {
 
     log.info(graph.edges.count() + " edges and " + graph.vertices.count() + " vertices in the initial graph after removing singletones")
 
-    val startTime = APR_01_START
-    val endTime = APR_01_END
+    val startTime = DEC_99_START
+    val endTime = DEC_99_END
 
     // STD filtering
-    val BURST_RATE = 5
-    val BURST_COUNT = 3
+    val BURST_RATE = 2
+    val BURST_COUNT = 1
 
     /**
       * Check if a time-series has spikes.
@@ -125,6 +125,7 @@ object BuildGraph {
 
     log.info(LCC.vertices.count() + " vertices and " + LCC.edges.count() + " edges in LCC")
 
-    saveGraph(LCC.mapVertices((id, v) => v), weighted = false, fileName = PATH_RESOURCES + "graph.gexf")
+//    saveGraph(LCC.mapVertices((id, v) => v), weighted = false, fileName = PATH_RESOURCES + "graph.gexf")
+//    LCC.vertices.map(_._1).toDF().coalesce(1).write.csv("dec01STD_99_02.csv")
   }
 }
