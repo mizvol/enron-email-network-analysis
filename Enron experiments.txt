@@ -1,0 +1,3 @@
+Enron experiments description.
+
+Apart from Wikipedia web network, the proposed approach allows detecting anomalies in other temporal networks.
