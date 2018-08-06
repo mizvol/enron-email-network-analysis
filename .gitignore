@@ -8,3 +8,7 @@ EnronNet/project/
 EnronNet/target/
 
 EnronNet/src/main/resources/graph\.gexf
+
+*.log
+
+*.gz
