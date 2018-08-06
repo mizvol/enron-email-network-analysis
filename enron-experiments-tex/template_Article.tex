@@ -1,5 +1,5 @@
 \documentclass[]{article}
-
+\usepackage{url}
 %opening
 \title{Enron Network Analysis. Anomaly detection}
 \author{Volodymyr Miz}
@@ -13,7 +13,11 @@ Anomaly detection in the Enron Email Network.
 \end{abstract}
 
 \section{Experiments}
+In this experiment, we use the Enron email dataset\footnote{https://www.kaggle.com/wcukierski/enron-email-dataset}. It contains 614586 emails sent over the period from 6 January 1998 until 4 February 2004. During the pre-processing we remove the periods of low activity and keep the emails from 1 January 1999 until 31 July 2002 which is 1448 days of email records in total. Also, we remove email addresses that sent less than three emails over that period.
 
+To build a graph \mbox{$G = (V,E,W)$}, we use email addresses as nodes $V$. Every node $v_i \in V$ has an attribute which is a time-varying signal that corresponds to the number of emails sent from this address during a day. We draw an edge $e_{ij} \in E$ between two nodes $i$ and $j$ if there is at least one email exchange between the corresponding addresses. Initial weights $W$ are equal to $0$.
+
+In order to detect anomalies in the network activity, we apply the proposed algorithm to the Enron email network and compare our findings to the results presented in\footnote{https://arxiv.org/pdf/1306.0267.pdf}. The authors observe four anomalous periods and relate them to the specific news involving Enron.
 
 
 \end{document}
