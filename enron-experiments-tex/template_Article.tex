@@ -18,7 +18,7 @@ In this experiment, we use the Enron email dataset\footnote{https://www.kaggle.c
 
 To build a graph \mbox{$G = (V,E,W)$}, we use email addresses as nodes $V$. Every node $v_i \in V$ has an attribute which is a time-varying signal that corresponds to the number of emails sent from this address during a day. We draw an edge $e_{ij} \in E$ between two nodes $i$ and $j$ if there is at least one email exchange between the corresponding addresses. Initial weights $W$ are equal to $0$. In total, the initial Enron email network contains 6 600 nodes and 50 897 edges.
 
-In order to detect anomalies in the network activity, we apply the proposed algorithm to the Enron email network and compare our findings to the results presented in\footnote{https://arxiv.org/pdf/1306.0267.pdf}. The authors observe four anomalous periods and relate them to the specific news reports involving Enron. In Figure~\ref{fig: enron}, we show that our algorithm allows detecting all reported anomalies.
+In order to detect anomalies in the network activity, we apply the proposed algorithm to the Enron email network and compare our findings to the results presented in\footnote{https://arxiv.org/pdf/1306.0267.pdf}. The authors observe four anomalous periods and relate them to the specific news reports involving Enron. We use these events as a ground truth. In Figure~\ref{fig: enron}, we show that our algorithm allows detecting all reported anomalies.
 
 In our case, an anomaly is a spike of overall activity in a cluster of email addresses that we detect after learning. The addresses in this cluster cause an anomaly alert since their activity in the network deviates from their common behavior during the considered time period.
 
