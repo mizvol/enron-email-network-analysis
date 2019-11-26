@@ -12,3 +12,5 @@ EnronNet/src/main/resources/graph\.gexf
 *.log
 
 *.gz
+
+.DS_Store
